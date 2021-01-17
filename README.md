@@ -1,0 +1,2 @@
+# AutoClick
+For Mincraft
