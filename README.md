@@ -1,2 +1,6 @@
 # AutoClick
-For Mincraft
+# For Mincraft
+# f : left click
+# v : right click
+# ctrl + c : cancel
+pygame
