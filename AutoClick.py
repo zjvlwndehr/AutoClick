@@ -1,7 +1,3 @@
-#ketchup2480@gmail.com
-#github :zjvlwndehr
-#©2020
-
 import pyautogui as pag # 메크로 이벤트 생성
 import keyboard as kb   # 키(개별) 입력
 import os               # 프로그램 종료
