@@ -1,30 +1,25 @@
-import pyautogui as pag # 메크로 이벤트 생성
-import keyboard as kb   # 키(개별) 입력
-import os               # 프로그램 종료
-import pygame           # 클릭 틱 조정
+import win32api, win32con
+from time import sleep
 
+interval = 0.085
 
-def esc():
-    print("종료")
-    os._exit(1)   
+def click(x,y, button = "left"):
+    win32api.SetCursorPos((x,y))
+    if button == "left":
+        win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN,x,y,0,0)
+        win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP,x,y,0,0)
+    elif button == "right":
+        win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTDOWN,x,y,0,0)
+        win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTUP,x,y,0,0)
 
-    
-while(1): 
-    if kb.is_pressed('f'):
-        while(1):
-            currentMouseX, currentMouseY = pag.position()
-            pag.click(currentMouseX, currentMouseY,button='left')
-            if kb.is_pressed('ctrl'):
-                if kb.is_pressed('c'):
-                    esc()
-            if kb.is_pressed('f'):
-                break
-    if kb.is_pressed('v'):
-        while(1):
-            currentMouseX, currentMouseY = pag.position()
-            pag.click(currentMouseX, currentMouseY,button='right')
-            if kb.is_pressed('ctrl'):
-                if kb.is_pressed('c'):
-                    esc()
-            if kb.is_pressed('c'):
-                break
+while True:
+    x,y = win32api.GetCursorPos()
+    # if button is pressed
+    if win32api.GetAsyncKeyState(win32con.VK_XBUTTON2) != 0 and win32api.GetAsyncKeyState(win32con.VK_LBUTTON) != 0:
+        print("L")
+        click(x,y, button = "left")
+        sleep(interval)
+    if win32api.GetAsyncKeyState(win32con.VK_XBUTTON2) != 0 and win32api.GetAsyncKeyState(win32con.VK_RBUTTON) != 0:
+        print("R")
+        click(x,y, button = "right")
+        sleep(interval)
