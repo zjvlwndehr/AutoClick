@@ -65,7 +65,6 @@ class APP(QMainWindow):
         self.setWindowTitle("Just a tool")
         self.setWindowIcon(QIcon('resources/ico.jpg'))
         self.setWindowFlags(Qt.WindowMinimizeButtonHint)
-        # self.setWindowFlag(Qt.FramelessWindowHint)
         self.statusBar().showMessage("Pause")
         w = 300
         h = 150
