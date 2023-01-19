@@ -47,7 +47,6 @@ class APP(QMainWindow):
     def __init__(self) -> None:
         super().__init__()
         self.mouse = Mouse()
-        self.exitActionBtn = QPushButton("Exit", self)
         self.pause_or_start_Btn = QPushButton("", self)
         self.pause_or_start_Btn.setText("Go")
         self.UseRclickLabel = QLabel("Use Right click", self)
@@ -81,13 +80,8 @@ class APP(QMainWindow):
         self.RightKeyBindingLabel.setGeometry(10, 80, 200, 40)
         self.LeftKeyBindingLabel.setGeometry(10, 100, 200, 40)
 
-        self.exitActionBtn.setGeometry(w-65, 5, 60, 30)
-        self.exitActionBtn.clicked.connect(self.exitActionBtnClicked)
-        self.exitActionBtn.setShortcut('Ctrl+Q')
-
         exitAction = QAction(QIcon('exit.png'), 'Exit', self)
         exitAction.setShortcut('Ctrl+Q')
-        exitAction.setStatusTip('Exit application')
         exitAction.triggered.connect(self.exitActionBtnClicked)
 
         self.toolbar = self.addToolBar('Exit')
@@ -132,7 +126,6 @@ class APP(QMainWindow):
             self.p_list.append(self.p)
 
     def exitActionBtnClicked(self):
-        print(self.p)
         if self.p_list == []:
             pass
         else:
@@ -142,7 +135,6 @@ class APP(QMainWindow):
                 pass
             self.p_list = []
             self.p = None
-        print('exit')
         qApp.quit()
 
 if __name__ == "__main__":
