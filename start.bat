@@ -1,3 +1,3 @@
 @echo off
 cd %your/folder%
-start pythonw.exe AutoMouse.pyw
+start pythonw.exe AutoMouse.py
