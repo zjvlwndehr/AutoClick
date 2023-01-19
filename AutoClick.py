@@ -1,10 +1,8 @@
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QCoreApplication
 
-import win32api, win32con, win32gui
-import time
+import win32api, win32con
 from time import sleep
 
 from multiprocessing import Process
@@ -111,6 +109,7 @@ class APP(QMainWindow):
         else:
             self.mouse.Trig = False
             self.p.terminate()
+            self.p = Process(target=self.mouse.proc)
             self.statusBar().showMessage("Pause")
             self.pause_or_start_Btn.setText("Go")
 
