@@ -47,6 +47,7 @@ class APP(QMainWindow):
     def __init__(self) -> None:
         super().__init__()
         self.mouse = Mouse()
+        self.exitActionBtn = QPushButton("Exit", self)
         self.pause_or_start_Btn = QPushButton("", self)
         self.pause_or_start_Btn.setText("Go")
         self.UseRclickLabel = QLabel("Use Right click", self)
@@ -56,6 +57,7 @@ class APP(QMainWindow):
         self.LeftKeyBindingLabel = QLabel("Left click key bind", self)
         self.LeftKeyBindingLabel.setText(self.LeftKeyBindingLabel.text() + "\t: " + self.mouse.left_key_bind)
         self.p = Process(target=self.mouse.proc)
+        self.p_list = []
         self.initUI()
 
     def initUI(self):
@@ -64,7 +66,7 @@ class APP(QMainWindow):
         self.statusBar().showMessage("Pause")
       
         w = 300
-        h = 200
+        h = 150
 
         self.setGeometry(300, 300, w, h)
         
@@ -79,11 +81,14 @@ class APP(QMainWindow):
         self.RightKeyBindingLabel.setGeometry(10, 80, 200, 40)
         self.LeftKeyBindingLabel.setGeometry(10, 100, 200, 40)
 
+        self.exitActionBtn.setGeometry(w-65, 5, 60, 30)
+        self.exitActionBtn.clicked.connect(self.exitActionBtnClicked)
+        self.exitActionBtn.setShortcut('Ctrl+Q')
 
         exitAction = QAction(QIcon('exit.png'), 'Exit', self)
         exitAction.setShortcut('Ctrl+Q')
-
-        exitAction.triggered.connect(qApp.quit)
+        exitAction.setStatusTip('Exit application')
+        exitAction.triggered.connect(self.exitActionBtnClicked)
 
         self.toolbar = self.addToolBar('Exit')
         self.toolbar.addAction(exitAction)
@@ -99,19 +104,46 @@ class APP(QMainWindow):
             self.mouse.use_right_click = False
             self.RightKeyBindingLabel.setText("Right click key bind" + "\t: " + "None")
             self.LeftKeyBindingLabel.setText("Left click key bind" + "\t: " + "X1BUTTON\n" + "X2BUTTON")
+        self.restart()
     
     def pause_or_start(self):
         if self.statusBar().currentMessage() == "Pause":
             self.mouse.Trig = True
             self.p.start()
+            self.p_list.append(self.p)
             self.statusBar().showMessage("Running...")
             self.pause_or_start_Btn.setText("Pause")
         else:
             self.mouse.Trig = False
             self.p.terminate()
+            self.p_list = []
             self.p = Process(target=self.mouse.proc)
             self.statusBar().showMessage("Pause")
             self.pause_or_start_Btn.setText("Go")
+
+    def restart(self):
+        if self.p_list == []:
+            pass
+        else:
+            self.p.terminate()
+            self.p_list = []
+            self.p = Process(target=self.mouse.proc)
+            self.p.start()
+            self.p_list.append(self.p)
+
+    def exitActionBtnClicked(self):
+        print(self.p)
+        if self.p_list == []:
+            pass
+        else:
+            try:
+                self.p.terminate()
+            except:
+                pass
+            self.p_list = []
+            self.p = None
+        print('exit')
+        qApp.quit()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
