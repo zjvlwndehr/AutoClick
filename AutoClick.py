@@ -1,6 +1,7 @@
 import sys
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
 
 import win32api, win32con
 from time import sleep
@@ -47,6 +48,7 @@ class APP(QMainWindow):
     def __init__(self) -> None:
         super().__init__()
         self.mouse = Mouse()
+        self.icon = QIcon('resources/ico.jpg')
         self.pause_or_start_Btn = QPushButton("", self)
         self.pause_or_start_Btn.setText("Go")
         self.UseRclickLabel = QLabel("Use Right click", self)
@@ -62,13 +64,18 @@ class APP(QMainWindow):
     def initUI(self):
         self.setWindowTitle("Just a tool")
         self.setWindowIcon(QIcon('resources/ico.jpg'))
+        self.setWindowFlags(Qt.WindowMinimizeButtonHint)
+        # self.setWindowFlag(Qt.FramelessWindowHint)
         self.statusBar().showMessage("Pause")
-      
         w = 300
         h = 150
+
         self.setFixedSize(w, h)
         self.setGeometry(300, 300, w, h)
         
+        self.icon.addPixmap(QPixmap("resources/ico.jpg"), QIcon.Normal, QIcon.Off)
+        self.setWindowIcon(self.icon)
+
         self.pause_or_start_Btn.setToolTip("Pause the application")
         self.pause_or_start_Btn.setGeometry(int((w-100)/2)+70, int((h-50)/2), 100, 50)
         self.pause_or_start_Btn.clicked.connect(self.pause_or_start)
@@ -81,7 +88,7 @@ class APP(QMainWindow):
         self.LeftKeyBindingLabel.setGeometry(10, 100, 200, 40)
 
         exitAction = QAction(QIcon('resources/exit.png'), 'Exit', self)
-        exitAction.setShortcut('Ctrl+Q')
+        exitAction.setShortcut('Alt+F4')
         exitAction.triggered.connect(self.exitActionBtnClicked)
 
         self.toolbar = self.addToolBar('Exit')
