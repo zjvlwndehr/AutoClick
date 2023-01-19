@@ -61,7 +61,7 @@ class APP(QMainWindow):
 
     def initUI(self):
         self.setWindowTitle("Just a tool")
-        self.setWindowIcon(QIcon('ico.jpg'))
+        self.setWindowIcon(QIcon('resources/ico.jpg'))
         self.statusBar().showMessage("Pause")
       
         w = 300
@@ -80,7 +80,7 @@ class APP(QMainWindow):
         self.RightKeyBindingLabel.setGeometry(10, 80, 200, 40)
         self.LeftKeyBindingLabel.setGeometry(10, 100, 200, 40)
 
-        exitAction = QAction(QIcon('exit.png'), 'Exit', self)
+        exitAction = QAction(QIcon('resources/exit.png'), 'Exit', self)
         exitAction.setShortcut('Ctrl+Q')
         exitAction.triggered.connect(self.exitActionBtnClicked)
 
