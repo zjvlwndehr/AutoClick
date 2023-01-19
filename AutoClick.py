@@ -66,7 +66,7 @@ class APP(QMainWindow):
       
         w = 300
         h = 150
-
+        self.setFixedSize(w, h)
         self.setGeometry(300, 300, w, h)
         
         self.pause_or_start_Btn.setToolTip("Pause the application")
