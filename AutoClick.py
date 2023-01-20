@@ -14,6 +14,8 @@ class Mouse:
     def __init__(self) -> None:
         self.right_key_bind = 'X1BUTTON'
         self.left_key_bind = 'X2BUTTON'
+        self.LInterval = 0.041
+        self.RInterval = 0.021
         self.use_right_click = False
         self.Trig = False
         self.random_list = []
