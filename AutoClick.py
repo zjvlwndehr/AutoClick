@@ -129,11 +129,15 @@ class APP(QMainWindow):
             self.pause_or_start_Btn.setText("Go")
 
     def restart(self):
+        print("restart")
+        print(self.t_list)
         if self.t_list == []:
             pass
         else:
+            self.mouse.Trig = False
             self.t.join()
             self.t_list = []
+            self.mouse.Trig = True
             self.t = Thread(target=self.mouse.proc, daemon=True)
             self.t.start()
             self.t_list.append(self.t)
