@@ -5,6 +5,8 @@ from PyQt5.QtCore import *
 
 import win32api, win32con
 from time import sleep
+from random import randint
+from math import pow
 
 from multiprocessing import Process
 
@@ -12,20 +14,23 @@ class Mouse:
     def __init__(self) -> None:
         self.right_key_bind = 'X1BUTTON'
         self.left_key_bind = 'X2BUTTON'
-        self.LInterval = 0.045
-        self.RInterval = 0.023
+        self.LInterval = 0.041
+        self.RInterval = 0.021
         self.use_right_click = False
         self.Trig = False
+        self.random_list = []
+        for _ in range(100):
+            self.random_list.append(randint(0, 10)/1000)
 
     def click(self, x,y, button = "left"):
         win32api.SetCursorPos((x,y))
         if button == "left":
             win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN,x,y,0,0)
-            sleep(0.01)
+            sleep(0.01+(-1)**(randint(0, 1))*self.random_list[randint(0, 99)])
             win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP,x,y,0,0)
         elif button == "right":
             win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTDOWN,x,y,0,0)
-            sleep(0.01)
+            sleep(0.01+pow(-1, randint(0, 1))*self.random_list[randint(0, 99)])
             win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTUP,x,y,0,0)
 
     def proc(self):
@@ -34,10 +39,10 @@ class Mouse:
                 x,y = win32api.GetCursorPos()
                 if win32api.GetAsyncKeyState(win32con.VK_XBUTTON2):
                     self.click(x,y, button = "left")
-                    sleep(self.LInterval)
+                    sleep(self.LInterval+(-1)**(randint(0, 1))*self.random_list[randint(0, 99)])
                 if win32api.GetAsyncKeyState(win32con.VK_XBUTTON1):
                     self.click(x,y, button = "right")
-                    sleep(self.RInterval)
+                    sleep(self.RInterval+(-1)**(randint(0, 1))*self.random_list[randint(0, 99)])
             elif self.use_right_click == False:
                 if win32api.GetAsyncKeyState(win32con.VK_XBUTTON2) or win32api.GetAsyncKeyState(win32con.VK_XBUTTON1):
                     x,y = win32api.GetCursorPos()
