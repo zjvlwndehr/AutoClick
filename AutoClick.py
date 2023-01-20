@@ -8,7 +8,7 @@ from time import sleep
 from random import randint
 from math import pow
 
-from multiprocessing import Process
+from threading import Thread
 
 class Mouse:
     def __init__(self) -> None:
@@ -33,7 +33,7 @@ class Mouse:
             sleep(0.01+pow(-1, randint(0, 1))*self.random_list[randint(0, 99)])
             win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTUP,x,y,0,0)
 
-    def proc(self):
+    def proc(self) -> int:
         while self.Trig:
             if self.use_right_click == True:
                 x,y = win32api.GetCursorPos()
@@ -48,6 +48,7 @@ class Mouse:
                     x,y = win32api.GetCursorPos()
                     self.click(x,y, button = "left")
                     sleep(self.LInterval)
+        return 0
 
 class APP(QMainWindow):
     def __init__(self) -> None:
@@ -59,11 +60,11 @@ class APP(QMainWindow):
         self.UseRclickLabel = QLabel("Use Right click", self)
         self.UseRclickCheckBox = QCheckBox(self)
         self.RightKeyBindingLabel = QLabel("Right click key bind", self)
-        self.RightKeyBindingLabel.setText(self.RightKeyBindingLabel.text() + "\t: " + self.mouse.right_key_bind)
+        self.RightKeyBindingLabel.setText(self.RightKeyBindingLabel.text() + "\t: " + 'None')
         self.LeftKeyBindingLabel = QLabel("Left click key bind", self)
-        self.LeftKeyBindingLabel.setText(self.LeftKeyBindingLabel.text() + "\t: " + self.mouse.left_key_bind)
-        self.p = Process(target=self.mouse.proc)
-        self.p_list = []
+        self.LeftKeyBindingLabel.setText(self.LeftKeyBindingLabel.text() + "\t: " + self.mouse.left_key_bind + "\n" + self.mouse.right_key_bind)
+        self.t = Thread(target=self.mouse.proc, daemon=True)
+        self.t_list = []
         self.initUI()
 
     def initUI(self):
@@ -114,38 +115,39 @@ class APP(QMainWindow):
     def pause_or_start(self):
         if self.statusBar().currentMessage() == "Pause":
             self.mouse.Trig = True
-            self.p.start()
-            self.p_list.append(self.p)
+            self.t.start()
+            self.t_list.append(self.t)
             self.statusBar().showMessage("Running...")
             self.pause_or_start_Btn.setText("Pause")
         else:
             self.mouse.Trig = False
-            self.p.terminate()
-            self.p_list = []
-            self.p = Process(target=self.mouse.proc)
+            self.t.join()
+            self.t_list = []
+            self.t = Thread(target=self.mouse.proc, daemon=True)
+
             self.statusBar().showMessage("Pause")
             self.pause_or_start_Btn.setText("Go")
 
     def restart(self):
-        if self.p_list == []:
+        if self.t_list == []:
             pass
         else:
-            self.p.terminate()
-            self.p_list = []
-            self.p = Process(target=self.mouse.proc)
-            self.p.start()
-            self.p_list.append(self.p)
+            self.t.join()
+            self.t_list = []
+            self.t = Thread(target=self.mouse.proc, daemon=True)
+            self.t.start()
+            self.t_list.append(self.t)
 
     def exitActionBtnClicked(self):
-        if self.p_list == []:
+        if self.t_list == []:
             pass
         else:
             try:
                 self.p.terminate()
             except:
                 pass
-            self.p_list = []
-            self.p = None
+            self.t_list = []
+            self.t = None
         qApp.quit()
 
 if __name__ == "__main__":
