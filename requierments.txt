@@ -1,3 +1,2 @@
-win32api
-win32con
+pywin32
 PyQt5
