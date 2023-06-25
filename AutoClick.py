@@ -24,7 +24,6 @@ class Mouse:
 
     '''
     # Set the right click key bind
-    # @param key: The key bind
     '''
     def click(self, x,y, button = "left"):
         win32api.SetCursorPos((x,y))
@@ -37,6 +36,9 @@ class Mouse:
             sleep(0.01+pow(-1, randint(0, 1))*self.random_list[randint(0, 99)])
             win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTUP,x,y,0,0)
 
+    '''
+    # Toggle the click
+    '''
     def toggle(self, x,y, button = "left", on = True):
         print("toggle")
         win32api.SetCursorPos((x,y))
@@ -45,6 +47,10 @@ class Mouse:
         elif button == "right":
             win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTDOWN,x,y,0,0) if on else win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTUP,x,y,0,0)
 
+    '''
+    # Click thread
+    # Start the click thread
+    '''
     def click_proc(self) -> int:
         while self.Trig:
             if self.use_right_click == True:
@@ -62,6 +68,11 @@ class Mouse:
                     sleep(self.LInterval)
         return 0
 
+
+    '''
+    # Toggle thread
+    # Start the toggle thread
+    '''
     def toggle_proc(self) -> int:
         print(f"toggle proc : {self.Trig}")
         while self.Trig:
