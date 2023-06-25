@@ -27,11 +27,11 @@ class Mouse:
     '''
     def click(self, x,y, button = "left"):
         win32api.SetCursorPos((x,y))
-        if button == "left":
+        if button.lower() == "left":
             win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN,x,y,0,0)
             sleep(0.01+(-1)**(randint(0, 1))*self.random_list[randint(0, 99)])
             win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP,x,y,0,0)
-        elif button == "right":
+        elif button.lower() == "right":
             win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTDOWN,x,y,0,0)
             sleep(0.01+pow(-1, randint(0, 1))*self.random_list[randint(0, 99)])
             win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTUP,x,y,0,0)
@@ -42,9 +42,9 @@ class Mouse:
     def toggle(self, x,y, button = "left", on = True):
         print("toggle")
         win32api.SetCursorPos((x,y))
-        if button == "left":
+        if button.lower() == "left":
             win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN,x,y,0,0) if on else win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP,x,y,0,0)
-        elif button == "right":
+        elif button.lower() == "right":
             win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTDOWN,x,y,0,0) if on else win32api.mouse_event(win32con.MOUSEEVENTF_RIGHTUP,x,y,0,0)
 
     '''
@@ -75,14 +75,39 @@ class Mouse:
     '''
     def toggle_proc(self) -> int:
         print(f"toggle proc : {self.Trig}")
+        isClicked = False
         while self.Trig:
+            sleep(0.1)
             x, y = win32api.GetCursorPos()
-            if win32api.GetAsyncKeyState(win32con.VK_XBUTTON2) == -32767: # XBUTTON2 is clicked
-                self.toggle(x,y, button = "left", on = True)
+            if self.use_right_click == True:
+                if win32api.GetAsyncKeyState(win32con.VK_XBUTTON2) == -32767: # XBUTTON2 is clicked
+                    if not isClicked:
+                        self.toggle(x,y, button = "left", on = True)
+                        isClicked = True
+                    else:
+                        self.toggle(x,y, button = "left", on = False)
+                        isClicked = False
+                if win32api.GetAsyncKeyState(win32con.VK_XBUTTON1) == -32767: # XBUTTON1 is clicked
+                    if not isClicked:
+                        self.toggle(x,y, button = "right", on = True)
+                        isClicked = True
+                    else:
+                        self.toggle(x,y, button = "right", on = False)
+                        isClicked = False
                 sleep(self.LInterval)
-            if win32api.GetAsyncKeyState(win32con.VK_XBUTTON2) == -32767: # XBUTTON2 is clicked
-                self.toggle(x,y, button = "right", on = True)
-                sleep(self.LInterval)
+            elif self.use_right_click == False:
+                if win32api.GetAsyncKeyState(win32con.VK_XBUTTON2) == -32767 or win32api.GetAsyncKeyState(win32con.VK_XBUTTON1) == -32767: # XBUTTON2 is clicked
+                    if not isClicked:
+                        self.toggle(x,y, button = "left", on = True)
+                        isClicked = True
+                    else:
+                        self.toggle(x,y, button = "left", on = False)
+                        isClicked = False
+                    sleep(self.LInterval)
+            if win32api.GetAsyncKeyState(win32con.VK_ESCAPE) == -32767:
+                self.toggle(x,y, button = "left", on = False)
+                self.toggle(x,y, button = "right", on = False)
+                isClicked = False
         return 0
 
 
